@@ -1,0 +1,33 @@
+-- {{ desc }}
+
+local _M = {}
+
+_M.version = "0.5"
+
+local _rules = {
+    {% for r in rules %}
+    {
+        id = {{ r.id }},
+        var = {
+            type = "{{ r.var.type  }}",
+            pattern = "{{ r.var.pattern }}",
+            operator = "{{ r.var.operator }}"
+            opts = {
+                {% if r.var.opts.key %}key = {{ r.var.opts.key }} {% endif %}},
+            }
+        },
+        opts = { {% if r.opts.parsepattern %}parsepattern = {{ r.opts.parsepattern|lower }}, {% endif %}\
+        {% if r.opts.nolog %}nolog = {{ r.opts.nolog|lower }}, {% endif %}\
+        {% if r.opts.key %}key = {{ r.opts.key }} {% endif %}},
+        action = "{{ r.action }}",
+        description = "{{ r.description }}"
+    } {% if not loop.last %}, {% endif %}
+    {% endfor %}
+
+}
+
+function _M.rules()
+    return _rules
+end
+
+return _M
